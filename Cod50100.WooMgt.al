@@ -2,6 +2,31 @@ codeunit 86011 WooMgt
 {
     trigger OnRun()
     var
+        Item: Record Item;
+    begin
+
+        RunGetItems();
+        Item.SetRange("Synch To Woo Commerce", true);
+        if Item.FindSet() then
+            repeat
+                PostItem(Item);
+            until Item.Next() = 0;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterModifyEvent', '', false, false)]
+    local procedure OnModifyGenJournalLine(var Rec: Record Item; var xRec: Record Item)
+    begin
+
+        if Rec."Synch To Woo Commerce" then begin
+            if (Rec."Unit Price" = xrec."Unit Price") and (Rec."Unit Cost" = xRec."Unit Cost") and (Rec."Profit %" = xRec."Profit %") then
+                exit;
+
+            PostItem(Rec);
+        end;
+    end;
+
+    procedure RunGetItems()
+    var
         Jsongroups: JsonArray;
         jsongroup: JsonObject;
         CurrentNo: Text;
@@ -33,18 +58,6 @@ codeunit 86011 WooMgt
                     Item."Woo Commerce Id" := ItemId;
                     Item.Modify();
                 until item.Next() = 0;
-        end;
-    end;
-
-    [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterModifyEvent', '', false, false)]
-    local procedure OnModifyGenJournalLine(var Rec: Record Item; var xRec: Record Item)
-    begin
-
-        if Rec."Synch To Woo Commerce" then begin
-            if (Rec."Unit Price" = xrec."Unit Price") and (Rec."Unit Cost" = xRec."Unit Cost") and (Rec."Profit %" = xRec."Profit %") then
-                exit;
-
-            PostItem(Rec);
         end;
     end;
 

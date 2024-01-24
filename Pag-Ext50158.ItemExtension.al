@@ -32,7 +32,19 @@ pageextension 50158 "Item Extension" extends "Item Card"
     {
         addlast(Functions)
         {
-            action(SynchWoo)
+            action("Synch Woo Ids")
+            {
+                ApplicationArea = All;
+                Image = OutlookSyncSubFields;
+                trigger OnAction()
+                var
+                    Woo: Codeunit WooMgt;
+                begin
+                    Woo.RunGetItems();
+                end;
+            }
+
+            action("Synch Full Woo")
             {
                 ApplicationArea = All;
                 Image = OutlookSyncSubFields;
@@ -45,5 +57,4 @@ pageextension 50158 "Item Extension" extends "Item Card"
             }
         }
     }
-
 }
