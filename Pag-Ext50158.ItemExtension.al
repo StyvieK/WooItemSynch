@@ -34,6 +34,7 @@ pageextension 50158 "Item Extension" extends "Item Card"
         {
             action(SynchWoo)
             {
+                ApplicationArea = All;
                 Image = OutlookSyncSubFields;
                 trigger OnAction()
                 var

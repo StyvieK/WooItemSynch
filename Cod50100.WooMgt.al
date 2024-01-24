@@ -1,4 +1,4 @@
-codeunit 50100 WooMgt
+codeunit 86011 WooMgt
 {
     trigger OnRun()
     var
@@ -36,10 +36,14 @@ codeunit 50100 WooMgt
         end;
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterValidateEvent', 'Unit Price', false, false)]
-    local procedure OnModifyGenJournalLine(var Rec: Record Item; var xRec: Record Item; CurrFieldNo: Integer)
+    [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterModifyEvent', '', false, false)]
+    local procedure OnModifyGenJournalLine(var Rec: Record Item; var xRec: Record Item)
     begin
+
         if Rec."Synch To Woo Commerce" then begin
+            if (Rec."Unit Price" = xrec."Unit Price") and (Rec."Unit Cost" = xRec."Unit Cost") and (Rec."Profit %" = xRec."Profit %") then
+                exit;
+
             PostItem(Rec);
         end;
     end;

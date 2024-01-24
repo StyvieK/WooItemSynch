@@ -12,6 +12,5 @@ tableextension 50157 "Item Extesion" extends Item
             Caption = 'Woo Commerce Id';
             DataClassification = ToBeClassified;
         }
-
     }
 }
